@@ -17,5 +17,3 @@ async def get_user(uid):
         return await rd.hgetall(id)
     raise Error(f"User {uid} not found")
 
-
-app.run(port=8000)
