@@ -1,7 +1,9 @@
 from db import rd
-from app import app, jsonify
+# from app import app, jsonify
+from flask import Flask, jsonify
 from error import Error
 
+app = Flask(__name__)
 
 @app.errorhandler(Error)
 def handle_error(error: Error):
