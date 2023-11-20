@@ -6,7 +6,7 @@ from error import Error
 app = Flask(__name__)
 
 @app.errorhandler(Error)
-def handle_error(error: Error):
+async def handle_error(error: Error):
     response = jsonify({"error": error.message})
     response.status_code = 404
     return response
@@ -19,3 +19,7 @@ async def get_user(uid):
         return user
     raise Error(f"User {uid} not found")
 
+
+
+from asgiref.wsgi import WsgiToAsgi
+asgi_app = WsgiToAsgi(app)
