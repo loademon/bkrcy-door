@@ -3,10 +3,16 @@ from app import app, asgi_app, jsonify
 
 from error import Error
 
+@app.route("/", methods=["GET"])
+# how to use page
+async def index():
+    return "<h1>usage: /user</h1>"
+
+
 @app.route("/user", methods=["GET"])
 # how to use page
 async def user():
-    return "<h1>usage: /user/<uid></h1>"
+    return "<h1>usage: /user/{uid}</h1>"
 
 
 @app.route("/user/<uid>", methods=["GET"])
