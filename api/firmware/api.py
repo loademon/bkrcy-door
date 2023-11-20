@@ -1,17 +1,14 @@
 from db import rd
 from app import app, asgi_app, jsonify
 
-# from flask import Flask, jsonify
 from error import Error
 
-# app = Flask(__name__)
 
-
-@app.errorhandler(Error)
-async def handle_error(error: Error):
-    response = jsonify({"error": error.message})
-    response.status_code = 404
-    return response
+# @app.errorhandler(Error)
+# async def handle_error(error: Error):
+#     response = jsonify({"error": error.message})
+#     response.status_code = 404
+#     return response
 
 
 @app.route("/user/<uid>", methods=["GET"])
