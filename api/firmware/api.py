@@ -19,5 +19,3 @@ async def get_user(uid):
         return user
     raise Error(f"User {uid} not found")
 
-
-app.run(debug=True, threaded=True)
