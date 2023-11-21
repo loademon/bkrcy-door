@@ -1,6 +1,6 @@
 import auth
 from db import rd
-from app import app, asgi_app
+from app import app
 from error import Error
 
 
@@ -24,3 +24,8 @@ async def get_user(uid):
     if await rd.exists(id):
         return await rd.hgetall(id)
     raise Error(f"User {uid} not found")
+
+
+from asgiref.wsgi import WsgiToAsgi
+
+asgi_app = WsgiToAsgi(app)
