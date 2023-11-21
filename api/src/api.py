@@ -1,7 +1,7 @@
+import auth
 from db import rd
 from app import app, asgi_app
 from error import Error
-from auth import auth_bp
 
 
 @app.route("/", methods=["GET"])
@@ -24,5 +24,3 @@ async def get_user(uid):
     if await rd.exists(id):
         return await rd.hgetall(id)
     raise Error(f"User {uid} not found")
-
-app.register_blueprint(auth_bp)

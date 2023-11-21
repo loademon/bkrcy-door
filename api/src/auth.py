@@ -1,4 +1,5 @@
 from app import (
+    app,
     LoginManager,
     UserMixin,
     redirect,
@@ -11,18 +12,15 @@ from app import (
     generate_password_hash,
     render_template_string,
     current_user,
-    Blueprint
 )
 from db import rd
 from secrets import token_hex
 import asyncio
 
-auth_bp = Blueprint("auth", __name__)
-
-auth_bp.secret_key = token_hex(16)
+app.secret_key = token_hex(16)
 
 login_menager = LoginManager()
-login_menager.init_app(auth_bp)
+login_menager.init_app(app)
 
 
 class User(UserMixin):
@@ -40,7 +38,7 @@ def user_loader(id):
     return User(id, asyncio.run(User.get(id)))
 
 
-@auth_bp.route("/login", methods=["GET"])
+@app.route("/login", methods=["GET"])
 async def login():
     # create simple login page with button and form
     page = """
@@ -53,7 +51,7 @@ async def login():
     return page
 
 
-@auth_bp.post("/login")
+@app.post("/login")
 async def login_post():
     id = request.form["id"]
     user = await User.get(id=id)
@@ -65,15 +63,13 @@ async def login_post():
     return redirect(url_for("protected"))
 
 
-@auth_bp.route("/protected")
+@app.route("/protected")
 @login_required
 def protected():
-    return render_template_string(
-        "Logged in as: {{ user.id }}", user=current_user
-    )
+    return render_template_string("Logged in as: {{ user.id }}", user=current_user)
 
 
-@auth_bp.route("/logout")
+@app.route("/logout")
 def logout():
     logout_user()
     return "Logged out"
