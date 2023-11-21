@@ -1,5 +1,6 @@
+import auth
 from db import rd
-from app import app,asgi_app
+from app import app, asgi_app
 from error import Error
 
 
