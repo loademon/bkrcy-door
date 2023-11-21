@@ -6,7 +6,8 @@ from error import Error
 @app.route("/", methods=["GET"])
 # how to use page
 async def home():
-    return "<h1>usage: /user</h1>"
+    go_to_login_page_button = "<a href='/login'>Go to login page</a>"
+    return f"<h1>usage: /user, /user/{{uid}}, /login</h1>{go_to_login_page_button}"
 
 
 @app.route("/user", methods=["GET"])
