@@ -65,12 +65,13 @@ async def login_post():
 
 @app.route("/protected")
 @login_required
-async def protected():
-    print(current_user)
-    return render_template_string("Logged in as: {{ user.id }}", user=current_user)
+def protected():
+    return render_template_string(
+        "Logged in as: {{ user.id }}", user=current_user
+    )
 
 
 @app.route("/logout")
-async def logout():
+def logout():
     logout_user()
     return "Logged out"
