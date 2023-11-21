@@ -15,7 +15,6 @@ from app import (
 )
 from db import rd
 from secrets import token_hex
-import asyncio
 
 app.secret_key = token_hex(16)
 
@@ -28,18 +27,18 @@ class User(UserMixin):
         self.id = id
         self.password = password
 
-    async def get(id):
-        passw = await rd.hget(f"account:{id}", "password")
+    def get(id):
+        passw = rd.hget(f"account:{id}", "password")
         return User(id, passw)
 
 
 @login_menager.user_loader
 def user_loader(id):
-    return User(id, asyncio.run(User.get(id)))
+    return User(id, User.get(id))
 
 
 @app.route("/login", methods=["GET"])
-async def login():
+def login():
     # create simple login page with button and form
     page = """
     <form action="/login" method="POST">
@@ -52,9 +51,9 @@ async def login():
 
 
 @app.post("/login")
-async def login_post():
+def login_post():
     id = request.form["id"]
-    user = await User.get(id=id)
+    user = User.get(id=id)
 
     if user is None or not check_password_hash(user.password, request.form["password"]):
         return redirect(url_for("login"))
