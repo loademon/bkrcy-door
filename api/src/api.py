@@ -1,6 +1,7 @@
 from db import rd
-from app import app
+from app import app, asgi_app
 from error import Error
+from auth import auth_bp
 
 
 @app.route("/", methods=["GET"])
@@ -24,7 +25,4 @@ async def get_user(uid):
         return await rd.hgetall(id)
     raise Error(f"User {uid} not found")
 
-
-from asgiref.wsgi import WsgiToAsgi
-
-asgi_app = WsgiToAsgi(app)
+app.register_blueprint(auth_bp)
