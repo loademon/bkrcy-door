@@ -37,7 +37,7 @@ def user_loader(id):
     return User(id, User.get(id))
 
 
-@app.route("/login", methods=["GET"])
+@app.route("/login")
 def login():
     # create simple login page with button and form
     page = """
