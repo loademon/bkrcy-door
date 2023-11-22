@@ -24,3 +24,5 @@ def get_user(uid):
     if rd.exists(id):
         return rd.hgetall(id)
     raise Error(f"User {uid} not found")
+
+#deneme
