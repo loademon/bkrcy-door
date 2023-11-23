@@ -1,0 +1,57 @@
+<style>
+    .alert {
+        padding: 20px;
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        position: relative;
+        font-size: 16px;
+        opacity: 0;
+        transition: opacity 0.1s; 
+    }
+
+    .alert .closebtn {
+        z-index: 9999;
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    .alert .closebtn:hover {
+        color: black;
+    }
+</style>
+
+<script>
+    function closeFlashMessage(event) {
+        var div = event.target.parentElement;
+        div.style.opacity = "0";
+        setTimeout(function(){ div.style.display = "none"; }, 600);
+    }
+
+    window.onload = function() {
+        var alerts = document.querySelectorAll('.alert');
+        for (var i = 0; i < alerts.length; i++) {
+            fadeIn(alerts[i], 600);
+        }
+    };
+
+    function fadeIn(element, time) {
+        var last = +new Date();
+        var tick = function() {
+            element.style.opacity = +element.style.opacity + (new Date() - last) / time;
+            last = +new Date();
+
+            if (+element.style.opacity < 1) {
+                (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+            }
+        };
+        tick();
+    }
+</script>
