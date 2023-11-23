@@ -1,31 +1,5 @@
-<style>
-    .alert {
-        padding: 20px;
-        width: 100%;
-        background-color: #4CAF50;
-        color: white;
-        margin-bottom: 15px;
-        border-radius: 5px;
-        position: relative;
-        font-size: 16px;
-        opacity: 0;
-        transition: opacity 0.1s;
-    }
-
-    .alert .closebtn {
-        z-index: 9999;
-        margin-left: 15px;
-        color: white;
-        font-weight: bold;
-        float: right;
-        font-size: 22px;
-        line-height: 20px;
-        cursor: pointer;
-    }
-
-    .alert .closebtn:hover {
-        color: black;
-    }
-</style>
+<head>
+    <link rel="stylesheet" href="{{url_for('static',filename= 'flash.css')}}">
+</head>
 
 <script src="{{url_for('static', filename='flash.js')}}"></script>
