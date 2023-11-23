@@ -17,13 +17,16 @@ from app import (
 from error import Error
 
 
-@app.route("/", methods=["GET"])
+
+@app.route("/")
 def home():
     go_to_login_page_button = "<a href='/login'>Go to login page</a>"
     return f"<h1>usage: /user, /user/{{uid}}, /login</h1>{go_to_login_page_button}"
 
 
-@app.route("/user", methods=["GET"])
+
+
+@app.route("/user")
 @login_required
 def user():
     available_doors = rd.smembers("doors")
@@ -46,7 +49,8 @@ def user():
     return render_template("user_form.html", doors=page, flash_messages= flash_messages_html)
 
 
-@app.route("/user/<uid>", methods=["GET"])
+
+@app.route("/user/<uid>")
 def get_user(uid):
     id = f"user:{uid}"
     if rd.exists(id):
@@ -72,6 +76,3 @@ def post_user():
     flash("User created successfully", "success")
 
     return redirect(url_for("user"))
-
-
-app.run()
