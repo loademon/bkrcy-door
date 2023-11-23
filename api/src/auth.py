@@ -11,7 +11,9 @@ from app import (
     check_password_hash,
     generate_password_hash,
     render_template_string,
+    render_template,
     current_user,
+    Markup
 )
 from db import rd
 from secrets import token_hex
@@ -40,14 +42,14 @@ def user_loader(id):
 @app.route("/login")
 def login():
     # create simple login page with button and form
-    page = """
-    <form action="/login" method="POST">
-        <input type="text" name="id">
-        <input type="password" name="password">
-        <input type="submit" value="login">
-    </form>
-    """
-    return page
+    # page = """
+    # <form action="/login" method="POST">
+    #     <input type="text" name="id">
+    #     <input type="password" name="password">
+    #     <input type="submit" value="login">
+    # </form>
+    # """
+    return render_template("login.html")
 
 
 @app.post("/login")
@@ -65,9 +67,8 @@ def login_post():
 @app.route("/protected")
 @login_required
 def protected():
-    return render_template_string(
-        "Logged in as: {{ user.id }}", user=current_user
-    )
+    go_to_user_page_button = "<a href='/user'>Go to user page</a>"
+    return go_to_user_page_button
 
 
 @app.route("/logout")
