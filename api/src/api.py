@@ -78,4 +78,23 @@ def post_user():
     )
     flash("User created successfully", "success")
 
-    return redirect(url_for("user"))
+@app.route("/delete")
+@login_required
+def delete():
+    return render_template("delete_form.html") 
+
+@app.route("/delete", methods=["POST"])
+@login_required
+def delete_user():
+    uid = request.form.get("uid")
+
+    id = f"user:{uid}"
+    if rd.exists(id):
+        rd.delete(id)
+        flash(f"User {uid} deleted successfully", "success")
+        return redirect(url_for("delete"))
+    
+    flash(f"User {uid} not found", "error")
+    return redirect(url_for("delete"))
+
+app.run()
