@@ -67,9 +67,7 @@ def login_post():
 @app.route("/protected")
 @login_required
 def protected():
-    go_to_user_page_button = "<a href='/user'>Go to user page</a>"
-    go_to_delete_page_button = "<a href='/delete'>Go to delete page</a>"
-    return go_to_user_page_button + "<br>" + go_to_delete_page_button
+    return render_template("protected.html")
 
 
 
