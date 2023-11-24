@@ -17,19 +17,15 @@ from app import (
 from error import Error
 
 
-
 @app.route("/")
 def home():
     go_to_login_page_button = "<a href='/login'>Go to login page</a>"
     return f"<h1>usage: /user, /user/{{uid}}, /login</h1>{go_to_login_page_button}"
 
 
-
-
 @app.route("/user")
 @login_required
 def user():
-    available_doors = rd.smembers("doors")
     flash_messages_html = render_template("flash.html")
     flash_messages_html += "".join(
         [
@@ -38,16 +34,19 @@ def user():
         ]
     )
     page = ""
-    for door in available_doors:
-        page += f'<div class="checkbox-container">' \
-            f'<label for="{door}">' \
-            f'<input type="checkbox" name="door_access" value="{door}">{door}' \
-            f'</label>' \
-            f'</div>\n'
+    for door in rd.smembers("doors"):
+        page += (
+            f'<div class="checkbox-container">'
+            f'<label for="{door}">'
+            f'<input type="checkbox" name="door_access" value="{door}">{door}'
+            f"</label>"
+            f"</div>\n"
+        )
     page = Markup(page)
 
-    return render_template("user_form.html", doors=page, flash_messages= flash_messages_html)
-
+    return render_template(
+        "user_form.html", doors=page, flash_messages=flash_messages_html
+    )
 
 
 @app.route("/user/<uid>")
@@ -61,8 +60,12 @@ def get_user(uid):
 
 
 @app.route("/user", methods=["POST"])
+@login_required
 def post_user():
     data = request.form
+    if rd.exists(f"user:{data['uid']}"):
+        flash("User already exists", "error")
+        return redirect(url_for("user"))
 
     rd.hset(
         name=f"user:{data['uid']}",
