@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename= 'user_form.css')}}">
     <title>Delete User</title>
 </head>
+<div class="flash">{{ flash_messages|safe }}</div>
+
 <body>
-    <h1>Delete Sayfasi</h1>
-    <form action="/delete" method="post">
-        <label for="uid">User ID:</label>
-        <input type="text" id="uid" name="uid" required>
-        
-        <button type="submit">Delete User</button>
+    <form action="/delete" method="post" onsubmit="return validateForm()">
+        <div class="checkbox-group">
+            <!-- Sunucu tarafından eklenen kapı erişim seçenekleri burada olacak -->
+            {{ users }}
+        </div>
+        <input type="submit" value="Delete User">
     </form>
 </body>
+
+<script src="{{url_for('static', filename='flash.js')}}"></script>
+<script src="{{url_for('static', filename='user_form.js')}}"></script>
+
 </html>

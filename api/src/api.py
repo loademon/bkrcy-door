@@ -19,8 +19,7 @@ from error import Error
 
 @app.route("/")
 def home():
-    go_to_login_page_button = "<a href='/login'>Go to login page</a>"
-    return f"<h1>usage: /user, /user/{{uid}}, /login</h1>{go_to_login_page_button}"
+    return render_template("index.html")
 
 
 @app.route("/user")
@@ -46,6 +45,33 @@ def user():
 
     return render_template(
         "user_form.html", doors=page, flash_messages=flash_messages_html
+    )
+
+
+@app.route("/delete")
+@login_required
+def delete():
+    flash_messages_html = render_template("flash.html")
+    flash_messages_html += "".join(
+        [
+            f'<div class="alert">{message}<span class="closebtn" onclick="closeFlashMessage(event)">&times;</span></div>'
+            for message in get_flashed_messages()
+        ]
+    )
+    page = ""
+    for user in rd.scan_iter("user:*"):
+        number = rd.hget(user, "school_number")
+        page += (
+            f'<div class="checkbox-container">'
+            f'<label for="{number}">'
+            f'<input type="checkbox" name="door_access" value="{user}">{number}'
+            f"</label>"
+            f"</div>\n"
+        )
+    page = Markup(page)
+
+    return render_template(
+        "delete_form.html", users=page, flash_messages=flash_messages_html
     )
 
 
@@ -77,24 +103,17 @@ def post_user():
         },
     )
     flash("User created successfully", "success")
+    return redirect(url_for("user"))
 
-@app.route("/delete")
-@login_required
-def delete():
-    return render_template("delete_form.html") 
 
-@app.route("/delete", methods=["POST"])
+@app.route("/delete/", methods=["POST"])
 @login_required
 def delete_user():
-    uid = request.form.get("uid")
+    users = request.form.getlist("door_access")
+    print(users)
 
-    id = f"user:{uid}"
-    if rd.exists(id):
-        rd.delete(id)
-        flash(f"User {uid} deleted successfully", "success")
-        return redirect(url_for("delete"))
-    
-    flash(f"User {uid} not found", "error")
+    for uid in users:
+        if rd.exists(uid):
+            rd.delete(uid)
+    flash(f"User/s deleted successfully", "success")
     return redirect(url_for("delete"))
-
-app.run()
