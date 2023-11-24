@@ -1,7 +1,7 @@
 function validateForm() {
     var checkboxes = document.querySelectorAll('input[name="door_access"]:checked');
     if (checkboxes.length == 0) {
-        alert('Lütfen en az bir kapı erişimi seçin.');
+        alert('Lütfen en az bir seçim yapın.');
         return false;
     }
     return true;
