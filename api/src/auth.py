@@ -29,9 +29,12 @@ class User(UserMixin):
         self.id = id
         self.password = password
 
+    @staticmethod
     def get(id):
         passw = rd.hget(f"account:{id}", "password")
-        return User(id, passw)
+        if passw:
+            return User(id, passw)
+        return None
 
 
 @login_manager.user_loader
