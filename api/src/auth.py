@@ -44,14 +44,6 @@ def user_loader(id):
 
 @app.route("/login")
 def login():
-    # create simple login page with button and form
-    # page = """
-    # <form action="/login" method="POST">
-    #     <input type="text" name="id">
-    #     <input type="password" name="password">
-    #     <input type="submit" value="login">
-    # </form>
-    # """
     return render_template("login.html")
 
 
