@@ -13,15 +13,15 @@ from app import (
     render_template_string,
     render_template,
     current_user,
-    Markup
+    Markup,
 )
 from db import rd
 from secrets import token_hex
 
 app.secret_key = token_hex(16)
 
-login_menager = LoginManager()
-login_menager.init_app(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
 class User(UserMixin):
@@ -34,7 +34,7 @@ class User(UserMixin):
         return User(id, passw)
 
 
-@login_menager.user_loader
+@login_manager.user_loader
 def user_loader(id):
     return User(id, User.get(id))
 
@@ -68,7 +68,6 @@ def login_post():
 @login_required
 def protected():
     return render_template("protected.html")
-
 
 
 @app.route("/logout")
