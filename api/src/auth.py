@@ -39,7 +39,7 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def user_loader(id):
-    return User(id, User.get(id))
+    return User.get(id=id)
 
 
 @app.route("/login")
