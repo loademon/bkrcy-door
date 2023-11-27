@@ -9,11 +9,7 @@ from app import (
     logout_user,
     login_required,
     check_password_hash,
-    generate_password_hash,
-    render_template_string,
     render_template,
-    current_user,
-    Markup,
 )
 from db import rd
 from secrets import token_hex
