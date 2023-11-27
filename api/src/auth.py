@@ -14,10 +14,19 @@ from app import (
 from db import rd
 from secrets import token_hex
 
-app.secret_key = token_hex(16)
+if not rd.exists("app:config"):
+    print("Key app:config not found. Creating it...")
+    rd.hset(name="app:config", key="secret_key", value=token_hex(16))
+    print("Key app:config created successfully")
+
+
+app.secret_key = rd.hget("app:config", "secret_key")
+print("Secret key set successfully")
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+print("Login manager initialized successfully")
 
 
 class User(UserMixin):
