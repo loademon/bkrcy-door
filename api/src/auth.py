@@ -13,6 +13,7 @@ from app import (
 )
 from db import rd
 from secrets import token_hex
+from datetime import timedelta
 
 if not rd.exists("app:config"):
     print("Key app:config not found. Creating it...")
@@ -60,7 +61,7 @@ def login_post():
     if user is None or not check_password_hash(user.password, request.form["password"]):
         return redirect(url_for("login"))
 
-    login_user(user)
+    login_user(user=user, remember=True, duration=timedelta(days=1))
     return redirect(url_for("protected"))
 
 
