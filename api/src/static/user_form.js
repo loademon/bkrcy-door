@@ -7,6 +7,15 @@ function validateForm() {
     return true;
 }
 
+function validateFormUser() {
+    var checkboxes = document.querySelectorAll('input[name="user"]:checked');
+    if (checkboxes.length == 0) {
+        alert('Lütfen en az bir seçim yapın.');
+        return false;
+    }
+    return true;
+}
+
 function toggleCheckbox(checkbox) {
     checkbox.checked = !checkbox.checked;
     var container = checkbox.closest('.checkbox-container');
