@@ -9,12 +9,10 @@ from app import (
     flash,
     redirect,
     url_for,
-    get_flashed_messages,
     render_template,
-    render_template_string,
-    Markup,
 )
 from error import Error
+from utils import create_page, Markup
 
 
 @app.route("/")
@@ -25,23 +23,9 @@ def home():
 @app.route("/user")
 @login_required
 def user():
-    flash_messages_html = render_template("flash.html")
-    flash_messages_html += "".join(
-        [
-            f'<div class="alert">{message}<span class="closebtn" onclick="closeFlashMessage(event)">&times;</span></div>'
-            for message in get_flashed_messages()
-        ]
+    flash_messages_html, page = create_page(
+        search=rd.smembers("doors"), type="door_access"
     )
-    page = ""
-    for door in rd.smembers("doors"):
-        page += (
-            f'<div class="checkbox-container">'
-            f'<label for="{door}">'
-            f'<input type="checkbox" name="door_access" value="{door}">{door}'
-            f"</label>"
-            f"</div>\n"
-        )
-    page = Markup(page)
 
     return render_template(
         "user_form.html", doors=page, flash_messages=flash_messages_html
@@ -51,24 +35,7 @@ def user():
 @app.route("/delete")
 @login_required
 def delete():
-    flash_messages_html = render_template("flash.html")
-    flash_messages_html += "".join(
-        [
-            f'<div class="alert">{message}<span class="closebtn" onclick="closeFlashMessage(event)">&times;</span></div>'
-            for message in get_flashed_messages()
-        ]
-    )
-    page = ""
-    for user in rd.scan_iter("user:*"):
-        number = rd.hget(user, "school_number")
-        page += (
-            f'<div class="checkbox-container">'
-            f'<label for="{number}">'
-            f'<input type="checkbox" name="door_access" value="{user}">{number}'
-            f"</label>"
-            f"</div>\n"
-        )
-    page = Markup(page)
+    flash_messages_html, page = create_page(search=rd.scan_iter("user:*"), type="user")
 
     return render_template(
         "delete_form.html", users=page, flash_messages=flash_messages_html
@@ -90,8 +57,9 @@ def get_user(uid):
 def post_user():
     data = request.form
     if rd.exists(f"user:{data['uid']}"):
-        flash("User already exists", "error")
-        return redirect(url_for("user"))
+        flash("User edited successfully", "success")
+    else:
+        flash("User created successfully", "success")
 
     rd.hset(
         name=f"user:{data['uid']}",
@@ -102,18 +70,28 @@ def post_user():
             "doors": dumps(data.getlist("door_access")),
         },
     )
-    flash("User created successfully", "success")
     return redirect(url_for("user"))
 
 
 @app.route("/delete/", methods=["POST"])
 @login_required
 def delete_user():
-    users = request.form.getlist("door_access")
-    print(users)
+    users = request.form.getlist("user")
 
     for uid in users:
         if rd.exists(uid):
             rd.delete(uid)
     flash(f"User/s deleted successfully", "success")
     return redirect(url_for("delete"))
+
+
+@app.route("/purge/<uid>")
+@login_required
+def purge_door_access(uid):
+    users = rd.scan_iter("user:*")
+    for user in users:
+        doors = loads(rd.hget(user, "doors"))
+        if uid in doors:
+            doors.remove(uid)
+            rd.hset(user, "doors", dumps(doors))
+    return {"message": "success"}
