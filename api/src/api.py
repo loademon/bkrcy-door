@@ -12,7 +12,7 @@ from app import (
     render_template,
 )
 from error import Error
-from utils import create_page, Markup
+from utils import create_page
 
 
 @app.route("/")
