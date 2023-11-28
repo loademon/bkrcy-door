@@ -11,7 +11,7 @@
 <div class="flash">{{ flash_messages|safe }}</div>
 
 <body>
-    <form action="/delete" method="post" onsubmit="return validateForm()">
+    <form action="/delete" method="post" onsubmit="return validateFormUser()">
         <div class="checkbox-group">
             <!-- Sunucu tarafından eklenen kapı erişim seçenekleri burada olacak -->
             {{ users }}
